@@ -13,7 +13,7 @@ void send_file(FILE *fp, int socket_tcp)
     {
         if (send(socket_tcp, data, sizeof(data), 0) == -1)
         {
-            perror("[-]Error in sending file.");
+            perror("Erro ao enviar arquivo.");
             exit(1);
         }
         bzero(data, 1024);
@@ -37,7 +37,6 @@ int main()
         perror("Erro de socket");
         exit(1);
     }
-    printf("[+]Socket do servidor criado.\n");
 
     endereco_servidor.sin_family = AF_INET;
     endereco_servidor.sin_port = porta;
@@ -49,7 +48,7 @@ int main()
         perror("Erro de socket");
         exit(1);
     }
-    printf("Conectado ao servidor.\n");
+    printf("\n\t Conectado ao servidor.\n");
 
     fp = fopen(filename, "r");
     if (fp == NULL)
@@ -59,9 +58,9 @@ int main()
     }
 
     send_file(fp, socket_tcp);
-    printf("Dados do arquivo transferidos com sucesso.\n");
+    printf("\t Dados do arquivo transferidos com sucesso.\n");
 
-    printf("Encerrando conexão.\n");
+    printf("\t Encerrando conexão.\n\n");
     close(socket_tcp);
 
     return 0;
