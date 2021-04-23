@@ -2,68 +2,67 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <strings.h>
 #include <arpa/inet.h>
-#define SIZE 1024
 
-void send_file(FILE *fp, int sockfd)
+void send_file(FILE *fp, int socket_tcp)
 {
-    int n;
-    char data[SIZE] = {0};
+    char data[1024] = {0};
 
-    while (fgets(data, SIZE, fp) != NULL)
+    while (fgets(data, 1024, fp) != NULL)
     {
-        if (send(sockfd, data, sizeof(data), 0) == -1)
+        if (send(socket_tcp, data, sizeof(data), 0) == -1)
         {
             perror("[-]Error in sending file.");
             exit(1);
         }
-        bzero(data, SIZE);
+        bzero(data, 1024);
     }
 }
 
 int main()
 {
     char *ip = "127.0.0.1";
-    int port = 8080;
+    int porta = 8080;
     int e;
 
-    int sockfd;
-    struct sockaddr_in server_addr;
+    int socket_tcp;
+    struct sockaddr_in endereco_servidor;
     FILE *fp;
-    char *filename = "send.txt";
+    char *filename = "cliente.txt";
 
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0)
+    socket_tcp = socket(AF_INET, SOCK_STREAM, 0);
+    if (socket_tcp < 0)
     {
-        perror("[-]Error in socket");
+        perror("Erro de socket");
         exit(1);
     }
-    printf("[+]Server socket created successfully.\n");
+    printf("[+]Socket do servidor criado.\n");
 
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = port;
-    server_addr.sin_addr.s_addr = inet_addr(ip);
+    endereco_servidor.sin_family = AF_INET;
+    endereco_servidor.sin_port = porta;
+    endereco_servidor.sin_addr.s_addr = inet_addr(ip);
 
-    e = connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+    e = connect(socket_tcp, (struct sockaddr *)&endereco_servidor, sizeof(endereco_servidor));
     if (e == -1)
     {
-        perror("[-]Error in socket");
+        perror("Erro de socket");
         exit(1);
     }
-    printf("[+]Connected to Server.\n");
+    printf("Conectado ao servidor.\n");
 
     fp = fopen(filename, "r");
     if (fp == NULL)
     {
-        perror("[-]Error in reading file.");
+        perror("Erro ao ler o arquivo.");
         exit(1);
     }
 
-    send_file(fp, sockfd);
-    printf("[+]File data sent successfully.\n");
+    send_file(fp, socket_tcp);
+    printf("Dados do arquivo transferidos com sucesso.\n");
 
-    printf("[+]Closing the connection.\n");
-    close(sockfd);
+    printf("Encerrando conexão.\n");
+    close(socket_tcp);
 
     return 0;
 }
