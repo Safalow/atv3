@@ -4,7 +4,7 @@
 #include <strings.h>
 #include <arpa/inet.h>
 
-void write_file(int socket_tcp)
+void escrever_no_arquivo(int socket_tcp)
 {
     int n;
     FILE *fp;
@@ -67,7 +67,7 @@ int main()
 
     tamanho_endereco_novo_socket = sizeof(endereco_novo_socket);
     novo_socket = accept(socket_tcp, (struct sockaddr *)&endereco_novo_socket, &tamanho_endereco_novo_socket);
-    write_file(novo_socket);
+    escrever_no_arquivo(novo_socket);
     printf("\t Dados recebidos com sucesso.\n\n");
 
     return 0;

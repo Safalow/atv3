@@ -5,7 +5,7 @@
 #include <strings.h>
 #include <arpa/inet.h>
 
-void send_file(FILE *fp, int socket_tcp)
+void enviar_arquivo(FILE *fp, int socket_tcp)
 {
     char data[1024] = {0};
 
@@ -57,7 +57,7 @@ int main()
         exit(1);
     }
 
-    send_file(fp, socket_tcp);
+    enviar_arquivo(fp, socket_tcp);
     printf("\t Dados do arquivo transferidos com sucesso.\n");
 
     printf("\t Encerrando conexão.\n\n");
